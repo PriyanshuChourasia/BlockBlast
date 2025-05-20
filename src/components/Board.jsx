@@ -37,13 +37,15 @@ const Board = () =>{
         if(shapeType[0].pattern == "lowerT"){
             lowerTCheck(item,shapeType[1]);
             return;
+        }else if(shapeType[0].pattern == "rectangle"){
+            rectangle(item,shapeType[1]);
+            return;
         }
     };
 
 
     function lowerTCheck(item,shape){
         const shapeColor = shape.color;
-        console.log(item,"item")
         let posI = item.i;
         let posJ = item.j;
         let downI = item.i + 1;
@@ -56,7 +58,6 @@ const Board = () =>{
         leftDownJ = leftDownJ - 1;
         rightDownJ = rightDownJ + 1;
 
-        console.log(leftDownI,leftDownJ,posI,posJ,downI,downJ,rightDownI,rightDownJ,"right");
         
         const posGameBoard = gameBoard.some((x) =>x.piece == null && Number(x.i) == posI && Number(x.j) == posJ);
         const leftDownGameBoard = gameBoard.some((x) => Number(x.i) == leftDownI && Number(x.j) == leftDownJ && x.piece == null);
@@ -68,6 +69,83 @@ const Board = () =>{
             const rightDownGameBoard = leftDownGameBoard.map((x) => Number(x.i) == rightDownI && Number(x.j) == rightDownJ ? {...x,piece:true,color:shapeColor} : x);
             const downGameBoard = rightDownGameBoard.map((x) => Number(x.i) == downI && Number(x.j) == downJ ? {...x,piece:true,color:shapeColor} : x);
             setGameBoard(downGameBoard);
+        }else{
+            return;
+        }
+    }
+
+    function rectangle(item,shape){
+        const checkItemNull = gameBoard.some((x) => Number(x.i) == item.i && Number(x.j) == item.j && x.piece == null);
+        if(!checkItemNull){
+            return;
+        }
+
+        const shapeColor = shape.color;
+        let posI = item.i;
+        let posJ = item.j;
+        let leftI = item.i;
+        let leftJ = item.j
+        let rightI = item.i;
+        let rightJ = item.j;
+        let leftDownI = item.i;
+        let leftDownJ = item.j;
+        let downI = item.i;
+        let downJ = item.j;
+        let rightDownI = item.i;
+        let rightDownJ = item.j;
+        
+        // left null check
+        leftJ = leftJ - 1;
+
+        const leftNullCheck = gameBoard.some((x) => Number(x.i) == leftI && Number(x.j) == leftJ && x.piece == null);
+        // right null check
+        rightJ = rightJ + 1;
+        const rightNUllCheck = gameBoard.some((x) => Number(x.i) == rightI && Number(x.j) == rightJ && x.piece == null);
+
+        // left down null
+        leftDownI = leftDownI + 1;
+        leftDownJ = leftDownJ - 1;
+        const leftDownNullCheck = gameBoard.some((x) => Number(x.i) == leftDownI && Number(x.j) == leftDownJ && x.piece == null);
+
+        // down null check
+        downI = downI + 1;
+        const downNullCheck = gameBoard.some((x) => Number(x.i) == downI && Number(x.j) == downJ && x.piece == null);
+
+        // right down null check
+        rightDownI = rightDownI + 1;
+        rightDownJ = rightDownJ + 1;
+        const rightDownNullCheck = gameBoard.some((x) => Number(x.i) == rightDownI && Number(x.j) == rightDownJ && x.piece == null);
+
+        if(leftNullCheck && rightNUllCheck && leftDownNullCheck && downNullCheck && rightDownNullCheck)
+        {
+            const rectangleMap = gameBoard.map((x) => {
+                if(Number(x.i) == leftI && Number(x.j) == leftJ){
+                    x.piece = true;
+                    x.color = shapeColor
+                }
+                else if(Number(x.i) == rightI && Number(x.j) == rightJ){
+                    x.piece = true;
+                    x.color = shapeColor;
+                }
+                else if(Number(x.i) == posI && Number(x.j) == posJ){
+                    x.piece = true;
+                    x.color = shapeColor;
+                }
+                else if(Number(x.i) == leftDownI && Number(x.j) == leftDownJ){
+                    x.piece = true;
+                    x.color = shapeColor;
+                }
+                else if(Number(x.i) == downI && Number(x.j) == downJ){
+                    x.piece = true;
+                    x.color = shapeColor;
+                }
+                else if(Number(x.i) == rightDownI && Number(x.j) == rightDownJ){
+                    x.piece = true;
+                    x.color = shapeColor;
+                }
+                return x;
+            });
+            setGameBoard(rectangleMap);
         }
     }
 
